@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>한눈에 보는 쉬운 성향 테스트</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts - Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Noto Sans KR', 'sans-serif'],
+          },
+          colors: {
+            warmBg: '#FAF7F2',
+            warmCard: '#FFFFFF',
+            accentOrange: '#E86A33',
+            accentGreen: '#2E7D32',
+            accentBlue: '#1E40AF',
+            softPeach: '#FFF3E0',
+            textMain: '#2C3E50',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #FAF7F2;
+      color: #2C3E50;
+      word-break: keep-all;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Font size scaling states */
+    .text-scale-normal { font-size: 100%; }
+    .text-scale-large { font-size: 115%; }
+    .text-scale-xlarge { font-size: 130%; }
+
+    /* Custom smooth transition */
+    .fade-in {
+      animation: fadeIn 0.4s ease-in-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Custom shadow and touch effect */
+    .touch-card {
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .touch-card:active {
+      transform: scale(0.98);
+    }
+
+    /* Custom Toast Notification */
+    #toast {
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-scale-large flex flex-col justify-between selection:bg-orange-200">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-white border-b border-orange-100 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
+      <button onclick="goHome()" class="flex items-center space-x-2 text-accentOrange font-extrabold text-xl sm:text-2xl hover:opacity-80 transition">
+        <i class="fa-solid fa-heart-pulse text-2xl"></i>
+        <span>마음 성향 테스트</span>
+      </button>
+
+      <!-- Font Size Controller -->
+      <div class="flex items-center space-x-1 bg-amber-50 p-1 rounded-full border border-amber-200">
+        <span class="text-xs font-bold text-amber-800 ml-2 mr-1">글자크기</span>
+        <button onclick="setFontScale('normal')" id="btn-scale-normal" class="w-8 h-8 rounded-full text-xs font-bold transition bg-white text-gray-700 shadow-sm">보통</button>
+        <button onclick="setFontScale('large')" id="btn-scale-large" class="w-8 h-8 rounded-full text-xs font-bold transition bg-accentOrange text-white font-bold shadow-sm">크게</button>
+        <button onclick="setFontScale('xlarge')" id="btn-scale-xlarge" class="w-8 h-8 rounded-full text-xs font-bold transition bg-white text-gray-700 shadow-sm">더크게</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-2xl mx-auto w-full px-4 py-6 flex-grow flex flex-col justify-center">
+
+    <!-- START SCREEN -->
+    <section id="screen-home" class="fade-in text-center space-y-6 py-4">
+      <div class="inline-block bg-orange-100 text-accentOrange font-bold px-4 py-1.5 rounded-full text-sm sm:text-base border border-orange-200">
+        ✨ 쉽고 즐거운 나만의 성격 알아보기
+      </div>
+
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 leading-tight">
+        복잡함 없이 한눈에 찾는<br>
+        <span class="text-accentOrange">나의 마음 성향 (MBTI)</span>
+      </h1>
+
+      <div class="bg-white p-6 rounded-3xl border-2 border-orange-100 shadow-sm space-y-4 text-left">
+        <div class="flex items-start space-x-3">
+          <div class="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0 mt-0.5">1</div>
+          <p class="text-gray-700 text-lg font-medium">어려운 단어 없이, 일상에서 쉽게 공감되는 질문 <strong>12가지</strong>로 구성되어 있습니다.</p>
+        </div>
+        <div class="flex items-start space-x-3">
+          <div class="bg-emerald-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0 mt-0.5">2</div>
+          <p class="text-gray-700 text-lg font-medium">두 개의 보기 중 <strong>나와 더 가까운 것</strong>을 편하게 누르시면 됩니다.</p>
+        </div>
+        <div class="flex items-start space-x-3">
+          <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0 mt-0.5">3</div>
+          <p class="text-gray-700 text-lg font-medium">질문 옆 <strong>'🔊 읽어주기'</strong> 버튼을 누르면 성우처럼 읽어드립니다.</p>
+        </div>
+      </div>
+
+      <div class="pt-4 space-y-3">
+        <button onclick="startTest()" class="w-full bg-accentOrange hover:bg-orange-600 text-white font-extrabold py-5 px-8 rounded-2xl text-2xl shadow-lg hover:shadow-xl transition transform active:scale-95 flex items-center justify-center space-x-3">
+          <span>테스트 시작하기</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+        <button onclick="openAllTypesModal()" class="w-full bg-white border-2 border-amber-300 hover:bg-amber-50 text-amber-900 font-bold py-3.5 px-6 rounded-2xl text-lg transition flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-book-open text-accentOrange"></i>
+          <span>모든 MBTI 유형 한눈에 구경하기</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- QUESTION SCREEN -->
+    <section id="screen-question" class="hidden fade-in space-y-6 py-2">
+      <!-- Progress Bar & Step Counter -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center text-base sm:text-lg font-bold text-gray-700">
+          <span id="question-number" class="text-accentOrange font-extrabold text-xl">질문 1 / 12</span>
+          <span id="question-percent" class="text-gray-500">8%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden p-0.5">
+          <div id="progress-bar" class="bg-accentOrange h-full rounded-full transition-all duration-300" style="width: 8.3%;"></div>
+        </div>
+      </div>
+
+      <!-- Question Card -->
+      <div class="bg-white p-6 sm:p-8 rounded-3xl border-2 border-orange-100 shadow-md space-y-4">
+        <div class="flex justify-between items-start gap-2">
+          <h2 id="question-title" class="text-2xl sm:text-3xl font-extrabold text-gray-800 leading-snug">
+            쉬는 날, 나에게 자유 시간이 생겼을 때 나의 모습은?
+          </h2>
+        </div>
+
+        <!-- Voice Read Button -->
+        <button onclick="speakCurrentQuestion()" class="inline-flex items-center space-x-2 bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-4 py-2 rounded-xl text-base transition">
+          <i class="fa-solid fa-volume-high text-accentOrange"></i>
+          <span>🔊 음성으로 크게 읽어주기</span>
+        </button>
+      </div>
+
+      <!-- Choices -->
+      <div class="space-y-4 pt-2">
+        <button onclick="selectAnswer('A')" class="touch-card w-full text-left bg-white hover:bg-orange-50 border-3 border-gray-200 hover:border-accentOrange p-6 rounded-2xl shadow-sm transition flex items-center justify-between group">
+          <div class="flex items-start space-x-4">
+            <span class="bg-orange-100 text-accentOrange font-black text-xl w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-accentOrange group-hover:text-white transition">A</span>
+            <span id="choice-a-text" class="text-xl sm:text-2xl font-bold text-gray-800 group-hover:text-accentOrange leading-relaxed">
+              사람들을 만나 이야기를 나누고 함께 모임을 갖는 것이 즐겁다.
+            </span>
+          </div>
+        </button>
+
+        <button onclick="selectAnswer('B')" class="touch-card w-full text-left bg-white hover:bg-emerald-50 border-3 border-gray-200 hover:border-emerald-600 p-6 rounded-2xl shadow-sm transition flex items-center justify-between group">
+          <div class="flex items-start space-x-4">
+            <span class="bg-emerald-100 text-emerald-700 font-black text-xl w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition">B</span>
+            <span id="choice-b-text" class="text-xl sm:text-2xl font-bold text-gray-800 group-hover:text-emerald-700 leading-relaxed">
+              집에서 편안하게 취미 생활을 하거나 혼자 조용히 휴식하는 것이 최고다.
+            </span>
+          </div>
+        </button>
+      </div>
+
+      <!-- Back Button -->
+      <div class="pt-2 text-center">
+        <button onclick="prevQuestion()" id="btn-prev" class="text-gray-500 hover:text-gray-800 font-bold text-lg py-2 px-4 rounded-lg">
+          <i class="fa-solid fa-chevron-left mr-1"></i> 이전 질문으로 돌아가기
+        </button>
+      </div>
+    </section>
+
+    <!-- LOADING SCREEN -->
+    <section id="screen-loading" class="hidden fade-in text-center py-16 space-y-6">
+      <div class="inline-block relative">
+        <div class="w-24 h-24 border-8 border-orange-200 border-t-accentOrange rounded-full animate-spin mx-auto"></div>
+        <i class="fa-solid fa-heart text-accentOrange text-3xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+      </div>
+      <h2 class="text-3xl font-extrabold text-gray-800">
+        답변을 바탕으로<br>나의 성향을 분석하고 있습니다...
+      </h2>
+      <p class="text-gray-600 text-lg font-medium">잠시만 기다려 주세요 😊</p>
+    </section>
+
+    <!-- RESULT SCREEN -->
+    <section id="screen-result" class="hidden fade-in space-y-6 py-2">
+      <!-- Result Banner Header -->
+      <div class="bg-gradient-to-b from-orange-500 to-amber-600 text-white p-8 rounded-3xl shadow-lg text-center space-y-4">
+        <div class="inline-block bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-base font-bold tracking-wide">
+          ✨ 나의 마음 성향 결과
+        </div>
+        
+        <div id="result-mbti-code" class="text-5xl sm:text-6xl font-black tracking-wider text-amber-100">
+          ESFJ
+        </div>
+
+        <h1 id="result-title" class="text-2xl sm:text-3xl font-extrabold leading-tight">
+          따뜻하고 다정다감한 친화력의 소유자
+        </h1>
+      </div>
+
+      <!-- Result Card Content -->
+      <div class="bg-white p-6 sm:p-8 rounded-3xl border-2 border-orange-100 shadow-md space-y-6">
+        
+        <!-- Summary Quote -->
+        <div class="bg-amber-50 border-l-4 border-accentOrange p-4 rounded-r-2xl text-lg font-bold text-amber-900 leading-relaxed" id="result-quote">
+          "주변 사람들을 따뜻하게 챙기고, 함께하는 시간에서 기쁨을 느끼는 든든한 존재입니다."
+        </div>
+
+        <!-- Key Traits -->
+        <div class="space-y-3">
+          <h3 class="text-xl font-extrabold text-gray-800 flex items-center space-x-2">
+            <i class="fa-solid fa-star text-accentOrange"></i>
+            <span>나의 대표 특징</span>
+          </h3>
+          <ul id="result-traits" class="space-y-2 text-lg text-gray-700 font-medium list-disc list-inside bg-gray-50 p-4 rounded-2xl border border-gray-100">
+            <!-- Dynamic traits injected here -->
+          </ul>
+        </div>
+
+        <!-- Leisure & Enjoyment -->
+        <div class="space-y-3">
+          <h3 class="text-xl font-extrabold text-gray-800 flex items-center space-x-2">
+            <i class="fa-solid fa-mug-hot text-emerald-600"></i>
+            <span>즐겁게 즐기면 좋은 활동</span>
+          </h3>
+          <p id="result-leisure" class="text-lg text-gray-700 font-medium bg-emerald-50 p-4 rounded-2xl border border-emerald-100 leading-relaxed">
+            <!-- Dynamic leisure injected here -->
+          </p>
+        </div>
+
+        <!-- Warm Encouragement Message -->
+        <div class="space-y-2">
+          <h3 class="text-xl font-extrabold text-gray-800 flex items-center space-x-2">
+            <i class="fa-solid fa-sun text-amber-500"></i>
+            <span>당신에게 전하는 따뜻한 한마디</span>
+          </h3>
+          <p id="result-advice" class="text-lg text-gray-700 font-medium bg-orange-50 p-4 rounded-2xl border border-orange-100 leading-relaxed">
+            <!-- Dynamic advice injected here -->
+          </p>
+        </div>
+
+        <!-- Good Match -->
+        <div class="pt-2 border-t border-gray-100 flex items-center justify-between bg-blue-50 p-4 rounded-2xl border border-blue-100">
+          <div class="flex items-center space-x-3">
+            <div class="bg-blue-600 text-white p-3 rounded-full flex-shrink-0">
+              <i class="fa-solid fa-handshake text-xl"></i>
+            </div>
+            <div>
+              <span class="text-sm font-bold text-blue-800 block">나와 잘 맞는 궁합 성향</span>
+              <span id="result-match" class="text-xl font-extrabold text-blue-900">ISFP (자연을 사랑하는 서정가)</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="space-y-3 pt-2">
+        <button onclick="copyResultToClipboard()" class="w-full bg-accentOrange hover:bg-orange-600 text-white font-extrabold py-4 px-6 rounded-2xl text-xl shadow-md transition flex items-center justify-center space-x-3">
+          <i class="fa-solid fa-share-nodes"></i>
+          <span>내 결과 가족·친구에게 공유하기</span>
+        </button>
+
+        <button onclick="startTest()" class="w-full bg-white border-2 border-gray-300 hover:bg-gray-100 text-gray-800 font-bold py-4 px-6 rounded-2xl text-xl transition flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>다시 테스트 해보기</span>
+        </button>
+
+        <button onclick="openAllTypesModal()" class="w-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-bold py-3.5 px-6 rounded-2xl text-lg transition flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-list-check"></i>
+          <span>16가지 전체 성향 사전 보기</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ALL MBTI TYPES MODAL -->
+  <div id="modal-all-types" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-2xl max-h-[85vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden">
+      <!-- Modal Header -->
+      <div class="p-5 bg-accentOrange text-white flex justify-between items-center">
+        <h3 class="text-2xl font-extrabold flex items-center space-x-2">
+          <i class="fa-solid fa-book"></i>
+          <span>16가지 마음 성향 사전</span>
+        </h3>
+        <button onclick="closeAllTypesModal()" class="text-white hover:text-amber-200 text-3xl font-bold w-10 h-10 flex items-center justify-center">
+          &times;
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 overflow-y-auto space-y-4" id="modal-mbti-list">
+        <!-- Injected via JS -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 bg-gray-50 border-t border-gray-200 text-center">
+        <button onclick="closeAllTypesModal()" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-8 rounded-xl text-lg">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white font-bold px-6 py-3 rounded-full shadow-2xl opacity-0 pointer-events-none transition-all duration-300 z-50 text-center text-lg">
+    결과가 복사되었습니다!
+  </div>
+
+  <!-- JavaScript Application Logic -->
+  <script>
+    /* Questions Database (12 intuitive questions) */
+    const questions = [
+      /* E / I */
+      {
+        dim: 'EI',
+        title: '쉬는 날, 나에게 자유 시간이 생겼을 때 나의 모습은?',
+        a: '사람들을 만나 이야기를 나누고 함께 모임을 갖는 것이 즐겁다.',
+        b: '집에서 편안하게 취미 생활을 하거나 혼자 조용히 휴식하는 것이 최고다.'
+      },
+      {
+        dim: 'EI',
+        title: '새로운 모임이나 여가 행사에 참석했을 때 나는?',
+        a: '처음 본 사람에게도 반갑게 인사하고 분위기를 살리는 편이다.',
+        b: '조용히 상황을 둘러보며 익숙하고 편한 사람 위주로 대화한다.'
+      },
+      {
+        dim: 'EI',
+        title: '일상에서 스트레스가 쌓였을 때 해소하는 방법은?',
+        a: '지인과 전화 수다를 떨거나 바깥으로 나가 활발하게 움직인다.',
+        b: '차 한 잔을 마시거나 음악을 들으며 혼자만의 정돈 시간을 갖는다.'
+      },
+
+      /* S / N */
+      {
+        dim: 'SN',
+        title: '누군가 나에게 새로운 소식을 전달해 줄 때 나는?',
+        a: '구체적으로 무슨 일이 어떻게 일어난 건지 정확한 사실을 먼저 물어본다.',
+        b: '이야기의 전반적인 의미나 앞으로 어떻게 될지 전체적인 흐름을 먼저 상상한다.'
+      },
+      {
+        dim: 'SN',
+        title: '새로운 기기나 가전제품을 사용하게 되었을 때 나는?',
+        a: '설명서를 하나씩 읽어보거나 순서대로 차근차근 작동해본다.',
+        b: '대략적인 직관과 감으로 일단 눌러보며 요령을 빠르게 익힌다.'
+      },
+      {
+        dim: 'SN',
+        title: '대화를 나눌 때 주로 어떤 주제가 더 흥미롭나요?',
+        a: '오늘 있었던 일, 건강, 음식, 실제 경험해 본 명확한 현실 이야기.',
+        b: '인생의 의미, 새로운 상상, "만약 ~라면 어떨까?" 하는 흥미로운 아이디어.'
+      },
+      {
+        dim: 'TF',
+        title: '중요한 일을 결정해야 할 때 나의 기준은?',
+        a: '객관적인 원칙과 이성적인 판단으로 공정하게 결정한다.',
+        b: '주변 사람들의 마음과 관계, 평화를 고려하여 따뜻하게 결정한다.'
+      },
+      {
+        dim: 'TF',
+        title: '누군가에게 조언이나 피드백을 주어야 할 때 나는?',
+        a: '조금 솔직하더라도 확실한 도움이 되는 솔루션을 솔직하게 전달한다.',
+        b: '상대방이 상처받지 않도록 따뜻하고 부드러운 말로 돌려서 표현한다.'
+      },
+
+      /* J / P */
+      {
+        dim: 'JP',
+        title: '여행이나 외출을 떠나기 전 나의 스타일은?',
+        a: '시간별 일정, 가볼 곳, 식사 장소를 미리 꼼꼼하게 계획해두어야 안심된다.',
+        b: '큰 틀만 정해두고 그날의 기분과 현지 상황에 따라 여유롭게 움직인다.'
+      },
+      {
+        dim: 'JP',
+        title: '집안일이나 처리해야 할 일을 마주했을 때 나는?',
+        a: '정해진 시간에 맞춰 그때그때 미루지 않고 정돈하는 편이다.',
+        b: '어느 정도 모아두었다가 마음이 내킬 때 한 번에 신나게 해치운다.'
+      },
+      {
+        dim: 'JP',
+        title: '약속 시간과 장소를 정할 때 나의 모습은?',
+        a: '시간과 장소를 명확하게 확정 짓고 미리 나가 기다리는 편이다.',
+        b: '약속 당일 상황에 맞춰 융통성 있게 조율하며 여유 있게 만난다.'
+      }
+    ];
+
+    /* Complete 16 MBTI Data */
+    const mbtiResults = {
+      'ESTJ': {
+        title: '솔선수범하는 듬직한 리더',
+        quote: '"책임감이 강하고 약속을 철저히 지키는 가장 신뢰받는 존재입니다."',
+        traits: [
+          '일처리가 정확하고 규칙을 잘 지킵니다.',
+          '주변 사람들을 잘 챙기고 든든한 버팀목이 되어줍니다.',
+          '매사에 명확하고 솔직한 대화를 좋아합니다.'
+        ],
+        leisure: '운동 모임, 정돈된 정원 가꾸기, 정기적인 동호회 활동',
+        advice: '가끔은 조금 내려놓고 여유를 즐겨도 괜찮습니다. 당신은 이미 충분히 훌륭합니다.',
+        match: 'INFP (따뜻한 마음의 시인)'
+      },
+      'ESFJ': {
+        title: '다정다감 따뜻한 조율사',
+        quote: '"주변 사람들을 따뜻하게 챙기고, 함께하는 시간에서 가장 큰 기쁨을 느낍니다."',
+        traits: [
+          '상대방의 기분과 상황을 세심하게 배려합니다.',
+          '모임에서 다정한 분위기를 만드는 행복 비타민입니다.',
+          '남에게 나누어주고 돕는 것을 아까워하지 않습니다.'
+        ],
+        leisure: '음식 나눠먹기, 친목 모임, 요리 클래스, 봉사 활동',
+        advice: '남을 챙기느라 정작 자신을 잊지 마세요. 당신의 마음도 소중히 보살펴주세요.',
+        match: 'ISFP (자연을 사랑하는 서정가)'
+      },
+      'ENFJ': {
+        title: '마음을 울리는 따뜻한 멘토',
+        quote: '"사람들의 가능성을 찾아주고 따뜻하게 용기를 북돋아 주는 분입니다."',
+        traits: [
+          '말 한마디도 따뜻하고 다정하게 건넵니다.',
+          '주변 사람들의 성장을 진심으로 응원합니다.',
+          '긍정적인 에너지를 널리 전파합니다.'
+        ],
+        leisure: '대화 나누기, 문화 예술 관람, 봉사 모임',
+        advice: '모든 사람을 다 만족시킬 수는 없습니다. 스스로의 휴식도 꼭 챙기세요.',
+        match: 'INTP (지혜로운 탐구가)'
+      },
+      'ENTJ': {
+        title: '당당하고 지혜로운 길잡이',
+        quote: '"멀리 바라보고 당당하게 앞장서서 문제를 해결해 내는 열정가입니다."',
+        traits: [
+          '어려운 일도 당황하지 않고 지혜롭게 헤쳐나갑니다.',
+          '자기 관리가 철저하며 늘 발전하고자 노력합니다.',
+          '시원시원하고 결단력 있는 모습을 보여줍니다.'
+        ],
+        leisure: '새로운 기술 배우기, 강연 듣기, 건강 관리 운동',
+        advice: '천천히 가더라도 함께 가는 즐거움을 느껴보세요.',
+        match: 'ISFP (자연을 사랑하는 서정가)'
+      },
+      'ISTJ': {
+        title: '신중하고 한결같은 소나무',
+        quote: '"변함없는 모습과 성실함으로 모두의 깊은 신뢰를 받는 분입니다."',
+        traits: [
+          '맡은 바 책임을 끝까지 실천해 냅니다.',
+          '매사에 신중하고 과장 없이 담백합니다.',
+          '가족과 가까운 이들에게 가장 든든한 울타리가 됩니다.'
+        ],
+        leisure: '독서, 바둑/장기, 조용한 산책, 수집 취미',
+        advice: '가끔은 계획에 없던 작은 탈출을 시도해 보세요. 새로운 재미가 기다립니다.',
+        match: 'ESFP (즐거운 분위기 메이커)'
+      },
+      'ISFJ': {
+        title: '소리 없이 빛나는 수호천사',
+        quote: '"티 내지 않고 묵묵히 이웃과 가족을 감싸 안아주는 따뜻한 분입니다."',
+        traits: [
+          '남들의 필요를 세심하게 알아차리고 도와줍니다.',
+          '온화하고 겸손하며 따뜻한 심성을 가졌습니다.',
+          '약속과 비밀을 소중히 지킵니다.'
+        ],
+        leisure: '자수/손공예, 화분 가꾸기, 맛있는 요리 만들기',
+        advice: '때로는 거절하는 법도 배워보세요. 당신의 선의는 이미 가득합니다.',
+        match: 'ESTP (활력 넘치는 에너자이저)'
+      },
+      'INFJ': {
+        title: '깊은 통찰력을 지닌 현자',
+        quote: '"마음의 깊이가 깊고, 타인의 아픔을 진심으로 이해해 주는 분입니다."',
+        traits: [
+          '생각이 깊고 눈빛에 따뜻함과 지혜가 담겨 있습니다.',
+          '조용하지만 분명한 자신만의 신념이 있습니다.',
+          '경청의 달인으로 주변 사람의 고민을 잘 들어줍니다.'
+        ],
+        leisure: '조용한 차 마시기, 명상, 글쓰기, 미술관 관람',
+        advice: '혼자만의 고민을 모두 안고 있지 말고 가까운 이에게 나누어 보세요.',
+        match: 'ENUM/ESTP (활발하고 쾌활한 동반자)'
+      },
+      'INTJ': {
+        title: '깊이 있게 생각하는 전략가',
+        quote: '"늘 멀리 내다보며 자신만의 지식과 생각을 단단히 쌓아가는 분입니다."',
+        traits: [
+          '독립적이고 자신의 생각을 명확하게 정립합니다.',
+          '비효율적인 것을 줄이고 내실을 다지는 것을 좋아합니다.',
+          '조용하지만 어떤 문제든 깊이 있게 분석합니다.'
+        ],
+        leisure: '다큐멘터리 시청, 전문 서적 읽기, 퍼즐/전략 게임',
+        advice: '가끔은 감정의 소통이 논리보다 힘이 셉니다. 따뜻한 한마디를 건네보세요.',
+        match: 'ESFP (즐거운 분위기 메이커)'
+      },
+      'ESTP': {
+        title: '에너지 넘치는 분위기 기둥',
+        quote: '"어디서나 시원시원하고 즐거운 웃음을 선사하는 활력소입니다."',
+        traits: [
+          '순발력이 뛰어나고 위기 상황에 대범하게 대응합니다.',
+          '유쾌한 대화와 행동으로 분위기를 화기애애하게 만듭니다.',
+          '직접 경험하고 몸으로 느끼는 것을 좋아합니다.'
+        ],
+        leisure: '등산, 스포츠 관람, 맛집 탐방, 여행',
+        advice: '속도도 좋지만, 가끔은 속도를 줄여 주변의 섬세한 풍경도 감상해 보세요.',
+        match: 'ISFJ (소리 없이 빛나는 수호천사)'
+      },
+      'ESFP': {
+        title: '주변을 환하게 밝히는 해바라기',
+        quote: '"함께 있으면 절로 미소가 지어지는 타고난 해피바이러스입니다."',
+        traits: [
+          '현재의 삶을 즐기고 사람들과 어울리는 것을 좋아합니다.',
+          '표정이 밝고 긍정적인 표현을 많이 합니다.',
+          '주변 사람에게 즐거움과 깜짝 선물을 주는 것을 좋아합니다.'
+        ],
+        leisure: '노래 교실, 댄스, 화려한 모임, 여행과 사진 찍기',
+        advice: '즐거움 속에서도 장기적인 건강과 내일을 위한 정돈을 함께 챙겨주세요.',
+        match: 'ISTJ (신중하고 한결같은 소나무)'
+      },
+      'ENFP': {
+        title: '호기심 가득한 자유로운 탐험가',
+        quote: '"마음속에 열정이 가득하고 언제나 새로운 즐거움을 찾아 나서는 분입니다."',
+        traits: [
+          '상상력이 풍부하고 늘 아이디어가 넘칩니다.',
+          '사람들을 편안하게 만들고 쉽게 친해집니다.',
+          '새로운 도전과 경험을 두려워하지 않습니다.'
+        ],
+        leisure: '새로운 취미 배우기, 사진 촬영, 문화 탐방',
+        advice: '한 번 시작한 일을 끝까지 마무리짓는 작은 기쁨도 누려보세요.',
+        match: 'INTJ (깊이 있게 생각하는 전략가)'
+      },
+      'ENTP': {
+        title: '재치 넘치는 지혜로운 솔루션사',
+        quote: '"막힌 문제를 색다른 시각으로 시원하게 풀어내는 재주꾼입니다."',
+        traits: [
+          '대화가 매끄럽고 유머 감각이 뛰어납니다.',
+          '새로운 생각과 방법에 호기심이 많습니다.',
+          '당당하고 자신감 넘치는 태도가 매력적입니다.'
+        ],
+        leisure: '토론 모임, 시사 관찰, 최신 기기 체험',
+        advice: '타인의 감정에도 조금 더 마음을 열어주면 완벽한 인기를 누릴 수 있습니다.',
+        match: 'INFJ (깊은 통찰력을 지닌 현자)'
+      },
+      'ISTP': {
+        title: '손재주 좋은 실속파 해결사',
+        quote: '"말보다는 행동으로, 무엇이든 척척 고쳐내고 해결하는 만능꾼입니다."',
+        traits: [
+          '관찰력이 뛰어나고 기계나 도구를 다루는 데 능숙합니다.',
+          '불필요한 말 대신 꼭 필요한 말로 실속을 차립니다.',
+          '과감하면서도 침착하게 상황을 판단합니다.'
+        ],
+        leisure: '목공/수리 취미, 낚시, 드라이브, 캠핑',
+        advice: '가끔은 내 마음속 기분을 주변에 소리 내어 표현해 주는 것이 좋습니다.',
+        match: 'ESFJ (다정다감 따뜻한 조율사)'
+      },
+      'ISFP': {
+        title: '마음이 고운 서정적 예술가',
+        quote: '"온화하고 겸손하며 순수한 마음으로 세상을 바라보는 분입니다."',
+        traits: [
+          '자연과 예쁜 것, 동물과 마음을 나누는 것을 좋아합니다.',
+          '남에게 피해 주는 것을 싫어하고 평화를 추구합니다.',
+          '소박하지만 따뜻한 감수성을 지니고 있습니다.'
+        ],
+        leisure: '화초 가꾸기, 음악 감상, 미술 수채화, 산책',
+        advice: '당신의 생각은 참 보석 같습니다. 가끔은 주저 말고 크게 의견을 내어보세요.',
+        match: 'ESTJ (솔선수범하는 듬직한 리더)'
+      },
+      'INFP': {
+        title: '마음이 따뜻한 꿈꾸는 시인',
+        quote: '"진실된 마음과 깊은 이해심으로 세상을 따스하게 만드는 분입니다."',
+        traits: [
+          '타인의 감정에 깊이 감동하고 잘 공감해 줍니다.',
+          '눈에 보이지 않는 소중한 가치를 묵묵히 지킵니다.',
+          '순수하고 아름다운 생각을 많이 품고 있습니다.'
+        ],
+        leisure: '시와 수필 읽기, 조용한 음악 감상, 자작글 쓰기',
+        advice: '세상의 소음에서 벗어나 나만의 소중한 가치를 더욱 사랑해 주세요.',
+        match: 'ENTJ (당당하고 지혜로운 길잡이)'
+      },
+      'INTP': {
+        title: '호기심 많은 조용한 학자',
+        quote: '"원리를 탐구하고 진실을 찾는 것에 깊은 재미를 느끼는 분입니다."',
+        traits: [
+          '궁금한 것은 깊이 있게 파고들어 답을 찾아냅니다.',
+          '주관이 뚜렷하며 논리적인 생각을 즐깁니다.',
+          '조용하지만 확실한 자기만의 세계가 있습니다.'
+        ],
+        leisure: '독서, 시사 분석, 과학/역사 다큐멘터리 관람',
+        advice: '생각에만 머무르지 않고 사람들과 작은 따뜻함도 공유해 보세요.',
+        match: 'ENFJ (마음을 울리는 따뜻한 멘토)'
+      }
+    };
+
+    /* State variables */
+    let currentStep = 0;
+    let userAnswers = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+    let currentScale = 'large';
+
+    /* Font Scale Controller */
+    function setFontScale(scale) {
+      currentScale = scale;
+      document.body.classList.remove('text-scale-normal', 'text-scale-large', 'text-scale-xlarge');
+      document.body.classList.add(`text-scale-${scale}`);
+
+      // Highlight active button
+      ['normal', 'large', 'xlarge'].forEach(s => {
+        const btn = document.getElementById(`btn-scale-${s}`);
+        if (s === scale) {
+          btn.className = 'w-8 h-8 rounded-full text-xs font-bold transition bg-accentOrange text-white shadow-sm';
+        } else {
+          btn.className = 'w-8 h-8 rounded-full text-xs font-bold transition bg-white text-gray-700 hover:bg-gray-100';
+        }
+      });
+    }
+
+    /* Screen Navigation */
+    function showScreen(screenId) {
+      ['screen-home', 'screen-question', 'screen-loading', 'screen-result'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById(screenId).classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goHome() {
+      // Stop speech if playing
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      showScreen('screen-home');
+    }
+
+    /* Start Test */
+    function startTest() {
+      currentStep = 0;
+      userAnswers = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+      renderQuestion();
+      showScreen('screen-question');
+    }
+
+    /* Render Current Question */
+    function renderQuestion() {
+      const q = questions[currentStep];
+      const total = questions.length;
+      
+      document.getElementById('question-number').innerText = `질문 ${currentStep + 1} / ${total}`;
+      const percent = Math.round(((currentStep + 1) / total) * 100);
+      document.getElementById('question-percent').innerText = `${percent}%`;
+      document.getElementById('progress-bar').style.width = `${percent}%`;
+
+      document.getElementById('question-title').innerText = q.title;
+      document.getElementById('choice-a-text').innerText = q.a;
+      document.getElementById('choice-b-text').innerText = q.b;
+
+      // Show/Hide prev button
+      const btnPrev = document.getElementById('btn-prev');
+      if (currentStep === 0) {
+        btnPrev.classList.add('invisible');
+      } else {
+        btnPrev.classList.remove('invisible');
+      }
+
+      // Stop previous speech
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    }
+
+    /* Select Answer */
+    function selectAnswer(choice) {
+      const q = questions[currentStep];
+      const dim = q.dim; // 'EI', 'SN', 'TF', 'JP'
+
+      // Record selection
+      if (choice === 'A') {
+        const key = dim[0]; // E, S, T, J
+        userAnswers[key]++;
+      } else {
+        const key = dim[1]; // I, N, F, P
+        userAnswers[key]++;
+      }
+
+      currentStep++;
+
+      if (currentStep < questions.length) {
+        renderQuestion();
+      } else {
+        // Test completed -> Show loading then result
+        showLoadingAndResult();
+      }
+    }
+
+    /* Go Back */
+    function prevQuestion() {
+      if (currentStep > 0) {
+        currentStep--;
+        renderQuestion();
+      }
+    }
+
+    /* Speech Synthesis (TTS) */
+    function speakCurrentQuestion() {
+      if (!('speechSynthesis' in window)) {
+        showToast('이 브라우저는 음성 읽기를 지원하지 않습니다.');
+        return;
+      }
+
+      window.speechSynthesis.cancel(); // Reset queue
+
+      const q = questions[currentStep];
+      const textToRead = `질문 ${currentStep + 1}. ${q.title}. 보기 에이. ${q.a}. 보기 비. ${q.b}.`;
+
+      const utterance = new SpeechSynthesisUtterance(textToRead);
+      utterance.lang = 'ko-KR';
+      utterance.rate = 0.88; // Slightly calm speed for high legibility
+      utterance.pitch = 1.0;
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    /* Calculate Result and Display */
+    function showLoadingAndResult() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      showScreen('screen-loading');
+
+      setTimeout(() => {
+        calculateAndRenderResult();
+        showScreen('screen-result');
+      }, 1400);
+    }
+
+    function calculateAndRenderResult() {
+      const E_or_I = userAnswers.E >= userAnswers.I ? 'E' : 'I';
+      const S_or_N = userAnswers.S >= userAnswers.N ? 'S' : 'N';
+      const T_or_F = userAnswers.T >= userAnswers.F ? 'T' : 'F';
+      const J_or_P = userAnswers.J >= userAnswers.P ? 'J' : 'P';
+
+      const finalCode = `${E_or_I}${S_or_N}${T_or_F}${J_or_P}`;
+      const data = mbtiResults[finalCode] || mbtiResults['ESFJ'];
+
+      document.getElementById('result-mbti-code').innerText = finalCode;
+      document.getElementById('result-title').innerText = data.title;
+      document.getElementById('result-quote').innerText = data.quote;
+      
+      // Traits
+      const traitsUl = document.getElementById('result-traits');
+      traitsUl.innerHTML = '';
+      data.traits.forEach(t => {
+        const li = document.createElement('li');
+        li.innerText = t;
+        traitsUl.appendChild(li);
+      });
+
+      document.getElementById('result-leisure').innerText = data.leisure;
+      document.getElementById('result-advice').innerText = data.advice;
+      document.getElementById('result-match').innerText = data.match;
+    }
+
+    /* Clipboard Copy Function */
+    function copyResultToClipboard() {
+      const code = document.getElementById('result-mbti-code').innerText;
+      const title = document.getElementById('result-title').innerText;
+      const textToCopy = `[마음 성향 테스트 결과]\n나의 MBTI: ${code} (${title})\n\n쉽고 즐겁게 내 성향 알아보러 가기: ${window.location.href}`;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          showToast('결과가 복사되었습니다! 원하는 곳에 붙여넣기 하세요.');
+        }).catch(() => {
+          fallbackCopyText(textToCopy);
+        });
+      } else {
+        fallbackCopyText(textToCopy);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showToast('결과가 복사되었습니다!');
+      } catch (err) {
+        showToast('복사에 실패했습니다.');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    /* Toast Helper */
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+
+    /* All Types Modal */
+    function openAllTypesModal() {
+      const listContainer = document.getElementById('modal-mbti-list');
+      listContainer.innerHTML = '';
+
+      Object.keys(mbtiResults).forEach(code => {
+        const item = mbtiResults[code];
+        const card = document.createElement('div');
+        card.className = 'bg-orange-50/50 p-4 rounded-2xl border border-orange-100 space-y-1';
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-2xl font-black text-accentOrange">${code}</span>
+            <span class="text-lg font-extrabold text-gray-800">${item.title}</span>
+          </div>
+          <p class="text-base text-gray-600 font-medium">${item.quote}</p>
+        `;
+        listContainer.appendChild(card);
+      });
+
+      document.getElementById('modal-all-types').classList.remove('hidden');
+    }
+
+    function closeAllTypesModal() {
+      document.getElementById('modal-all-types').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
